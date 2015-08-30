@@ -1,9 +1,10 @@
-package com.interview.game;
+package com.interview.game.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.interview.game.Screen.DrawableInterface;
 
 /**
  * Created by msatilmis on 29.08.2015.

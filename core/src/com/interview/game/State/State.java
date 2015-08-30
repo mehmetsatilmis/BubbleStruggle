@@ -1,6 +1,6 @@
 package com.interview.game.State;
 
-import com.interview.game.GameScreenManager;
+import com.interview.game.Screen.GameScreenManager;
 
 /**
  * Created by msatilmis on 29.08.2015.

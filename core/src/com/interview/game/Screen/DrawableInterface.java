@@ -1,4 +1,4 @@
-package com.interview.game;
+package com.interview.game.Screen;
 
 /**
  * Created by msatilmis on 29.08.2015.
