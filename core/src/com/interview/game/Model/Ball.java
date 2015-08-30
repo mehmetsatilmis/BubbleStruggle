@@ -13,6 +13,9 @@ public class Ball {
     public Vector2 position;
     private BallType ballType;
 
+    public static Integer MAX_LEVEL_NUMBER = 4; /*4 different level ball*/
+
+
     public Ball(Vector2 pos, int level){
         ballType = new BallType(level,level*10);
         position = pos;
@@ -22,7 +25,7 @@ public class Ball {
         this.ballType = ballType;
         position = vector2;
     }
-
+    // create 2 balls  after break
     public ArrayList<Ball> createChildBall(){
         ArrayList<BallType> ballTypes = ballType.createChildBall();
         ArrayList<Ball> balls = new ArrayList<Ball>();
@@ -36,6 +39,9 @@ public class Ball {
         ballType.dispose();
     }
 
+    /*
+        Simulated ball level
+     */
     private class BallType{
         public int level;
         public int score;
@@ -45,7 +51,7 @@ public class Ball {
             this.level = level;
             this.score = score;
         }
-
+        // create 2 balls type after break
         public ArrayList<BallType> createChildBall(){
             if(this.level == 1)
                 return null;

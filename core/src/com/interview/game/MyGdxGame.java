@@ -32,12 +32,12 @@ public class MyGdxGame implements ApplicationListener {
 
     @Override
     public void pause() {
-
+        playState.pause();
     }
 
     @Override
     public void resume() {
-
+        playState.resume();
     }
 
     @Override

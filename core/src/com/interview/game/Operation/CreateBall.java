@@ -21,7 +21,7 @@ public class CreateBall implements Runnable {
     private long delay;
     private ScheduledFuture<?> timer;
     private Vector2 default_position = new Vector2(320/ GameScreenManager.PPM_W, 380/GameScreenManager.PPM_H);
-
+    /*create ball every delay seconds*/
     public void runCreateBall(){
         ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
         timer = exec.scheduleAtFixedRate(this,0,delay, TimeUnit.SECONDS);
@@ -41,9 +41,10 @@ public class CreateBall implements Runnable {
        createBall();
     }
 
+    /*create ball and call main thread call back function*/
     private void createBall(){
         Random random = new Random();
 
-        callBack.onBallCreate(new Ball(default_position,random.nextInt(PlayState.MAX_LEVEL_NUMBER-1)+1));
+        callBack.onBallCreate(new Ball(default_position,random.nextInt(Ball.MAX_LEVEL_NUMBER-1)+1));
     }
 }
