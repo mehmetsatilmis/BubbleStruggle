@@ -1,0 +1,145 @@
+
+right-walking.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+447
+  rotate: false
+  xy: 1, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+449
+  rotate: false
+  xy: 38, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+451
+  rotate: false
+  xy: 75, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+453
+  rotate: false
+  xy: 112, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+455
+  rotate: false
+  xy: 149, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+457
+  rotate: false
+  xy: 186, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+459
+  rotate: false
+  xy: 223, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+461
+  rotate: false
+  xy: 260, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+463
+  rotate: false
+  xy: 297, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+465
+  rotate: false
+  xy: 334, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+467
+  rotate: false
+  xy: 371, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+469
+  rotate: false
+  xy: 408, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+471
+  rotate: false
+  xy: 445, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+473
+  rotate: false
+  xy: 482, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+475
+  rotate: false
+  xy: 519, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+477
+  rotate: false
+  xy: 556, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+479
+  rotate: false
+  xy: 593, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+481
+  rotate: false
+  xy: 630, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+483
+  rotate: false
+  xy: 667, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+485
+  rotate: false
+  xy: 704, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,47 @@
+
+weapon.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1
+  rotate: false
+  xy: 1, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 1, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 1, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 18, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 18, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 18, 1
+  size: 15, 494
+  orig: 15, 494
+  offset: 0, 0
+  index: -1

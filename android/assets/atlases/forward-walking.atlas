@@ -1,0 +1,103 @@
+
+forward-walking.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+354
+  rotate: false
+  xy: 1, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+356
+  rotate: false
+  xy: 38, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+358
+  rotate: false
+  xy: 75, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+360
+  rotate: false
+  xy: 112, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+362
+  rotate: false
+  xy: 149, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+364
+  rotate: false
+  xy: 186, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+366
+  rotate: false
+  xy: 223, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+368
+  rotate: false
+  xy: 260, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+370
+  rotate: false
+  xy: 297, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+372
+  rotate: false
+  xy: 334, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+374
+  rotate: false
+  xy: 371, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+376
+  rotate: false
+  xy: 408, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+378
+  rotate: false
+  xy: 445, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
+380
+  rotate: false
+  xy: 482, 1
+  size: 35, 55
+  orig: 35, 55
+  offset: 0, 0
+  index: -1
