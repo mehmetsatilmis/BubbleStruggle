@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.interview.game.Model.Ball;
+import com.interview.game.Model.Player;
 import com.interview.game.State.PlayState;
 
 /**
@@ -19,8 +20,51 @@ public class MyContantListener implements ContactListener {
     public void beginContact(Contact contact) {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
-
+        System.out.println("fa " + fa.getUserData() + " fb : " + fb.getUserData());
         if (fa.getUserData().equals("player") || fb.getUserData().equals("player")) {
+            Body playerBody = null;
+            boolean is_first = false;
+
+            if(fa.getUserData().equals("player")){
+                playerBody = fa.getBody();
+                is_first = true;
+            }else{
+                playerBody = fb.getBody();
+            }
+
+            if(is_first){
+                if(fb.getUserData().equals("left") || fb.getUserData().equals("right")){
+                  if(fb.getUserData().equals("left")){
+                      synchronized (Player.getPlayer()){
+                          Player.getPlayer().is_enable_walking_right = true;
+                          Player.getPlayer().isIs_enable_walking_left = false;
+                      }
+                  }else{
+                      synchronized (Player.getPlayer()){
+                          Player.getPlayer().is_enable_walking_right = false;
+                          Player.getPlayer().isIs_enable_walking_left = true;
+                      }
+                  }
+                }
+            }else{
+                System.out.println(" fb : " + fb.getUserData());
+                if(fa.getUserData().equals("left") || fa.getUserData().equals("right")){
+                    if(fa.getUserData().equals("left")){
+                        synchronized (Player.getPlayer()){
+                            Player.getPlayer().is_enable_walking_right = true;
+                            Player.getPlayer().isIs_enable_walking_left = false;
+                        }
+                    }else{
+                        synchronized (Player.getPlayer()){
+                            Player.getPlayer().is_enable_walking_right = false;
+                            Player.getPlayer().isIs_enable_walking_left = true;
+                        }
+                    }
+
+                }
+            }
+
+
 
         } else {
             synchronized (contact) {

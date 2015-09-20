@@ -13,7 +13,7 @@ import java.util.Set;
 public class FileManager {
 
     private LinkedHashMap<String ,Texture> textureList;
-    private FileManager fileManager = null;
+    private static FileManager fileManager = null;
 
     private FileManager(){
         textureList = new LinkedHashMap<String,Texture>();
@@ -31,7 +31,7 @@ public class FileManager {
     public static final String FONT_IMAGE = "fonts/font.png";
 
 
-    public FileManager getManager(){
+    public static FileManager getManager(){
         if(fileManager == null){
             fileManager = new FileManager();
         }
@@ -40,15 +40,17 @@ public class FileManager {
 
     public Texture getTexture(String texturePath,String key) {
 
-        if (texturePath == null)
-            return null;
+        if (texturePath != null && textureList.get(key) == null){
+            Texture texture = new Texture(Gdx.files.internal(texturePath));
+            textureList.put(key,texture);
+            return texture;
+        }
 
         if (textureList.get(key) != null)
             return textureList.get(key);
+        else
+            return null;
 
-        Texture texture = new Texture(Gdx.files.internal(texturePath));
-        textureList.put(key,texture);
-        return texture;
     }
 
     public void dispose(){

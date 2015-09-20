@@ -51,6 +51,6 @@ public class CreateBall implements Runnable {
         }
 
         callBack.onBallCreate(new Ball(default_position, random.nextInt(Ball.MAX_LEVEL_NUMBER - 1) + 1, direction
-        ));
+        ,null));
     }
 }

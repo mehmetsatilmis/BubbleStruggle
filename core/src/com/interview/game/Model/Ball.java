@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -13,15 +14,20 @@ import java.util.ArrayList;
 public class Ball {
     public Vector2 position;
     public Vector2 direction;
+    public Vector2 length;
+    public Body body;
+    public Texture texture;
     private BallType ballType;
+
 
     public static Integer MAX_LEVEL_NUMBER = 4; /*4 different level ball*/
 
 
-    public Ball(Vector2 pos, int level, Vector2 direction){
+    public Ball(Vector2 pos, int level, Vector2 direction,Body body){
         ballType = new BallType(level,level*10);
         position = pos;
         this.direction = direction;
+        //texture = FileManager.getManager().getTexture(ballType.texturePath,ballType.ballName);
     }
 
     private Ball(Vector2 vector2,BallType ballType, Vector2 direction){
@@ -43,17 +49,50 @@ public class Ball {
         ballType.dispose();
     }
 
+    public int getLevel(){
+        return ballType.level;
+    }
+
+    public String getBallName(){
+        return ballType.ballName;
+    }
+
+    public String getTexturePath(){
+        return ballType.texturePath;
+    }
     /*
         Simulated ball level
      */
     private class BallType{
         public int level;
         public int score;
-        public Texture texture;
+        public String texturePath;
+        public String ballName;
 
         public BallType(int level, int score){
             this.level = level;
             this.score = score;
+
+            if(level == 1){
+                texturePath = FileManager.BLUE_BALL;
+                ballName = "blueball";
+                length = new Vector2(8,10);
+            }else if(level == 2){
+                texturePath = FileManager.GREEN_BALL;
+                ballName = "greenball";
+                length = new Vector2(16,20);
+
+            }else if(level == 3){
+                texturePath = FileManager.PINK_BALL;
+                ballName = "pinkball";
+                length = new Vector2(32,36);
+
+            }else{
+                texturePath = FileManager.BLUE_BALL;
+                ballName = "blueball";
+                length = new Vector2(8,8);
+
+            }
         }
         // create 2 balls type after break
         public ArrayList<BallType> createChildBall(){
@@ -67,7 +106,7 @@ public class Ball {
         }
 
         public void dispose(){
-            texture.dispose();
+
         }
     }
 }

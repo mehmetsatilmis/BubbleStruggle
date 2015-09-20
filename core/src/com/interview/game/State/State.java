@@ -1,5 +1,6 @@
 package com.interview.game.State;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.interview.game.Screen.GameScreenManager;
 
 /**
@@ -13,6 +14,6 @@ public interface State {
     public void pause();
     public void resume();
     public void update(float dt);
-    public void render();
+    public void render(SpriteBatch spriteBatch);
     public void dispose();
 }
