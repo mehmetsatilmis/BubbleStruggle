@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.interview.game.Manager.AnimationManager;
 import com.interview.game.Manager.InputManager;
+import com.interview.game.Model.Weapon;
 import com.interview.game.Operation.MyContantListener;
 import com.interview.game.Screen.GameScreenManager;
 import com.interview.game.Model.Ball;
@@ -58,6 +59,10 @@ public class PlayState implements State {
 
         if (InputManager.isTouched) {
             weaponAnim = AnimationManager.getInstance().getAnimation(AnimationManager.WEAPON, "weapon");
+        }
+
+        if(Weapon.getWeapon().isActive){
+            Weapon.getWeapon().shoot();
         }
 
         gameScreenManager.setPlayerAnim(anim);

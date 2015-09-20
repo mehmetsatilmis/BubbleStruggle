@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class GameScreenManager implements DrawableInterface {
 
-    private World world;
+    public static  World world;
     private Box2DDebugRenderer box2DDebugRenderer;
     private OrthographicCamera orthoCam;
 
@@ -77,16 +77,8 @@ public class GameScreenManager implements DrawableInterface {
         Player.getPlayer().anim = anim;
     }
 
-    public void WeaponAnim(Animation anim){
-        Player.getPlayer().anim = anim;
-    }
-
     public Player getPlayer(){
         return Player.getPlayer();
-    }
-
-    public Weapon getWeapon(){
-        return Weapon.getWeapon();
     }
 
     @Override
@@ -120,13 +112,15 @@ public class GameScreenManager implements DrawableInterface {
 
         spriteBatch.begin();
         //Background
-        spriteBatch.draw(texture, startScreenX(), startScreenY(),
-                getScreenWidth(),
-                getScreenHeight());
+       // spriteBatch.draw(texture, startScreenX(), startScreenY(),
+       //         getScreenWidth(),
+        //        getScreenHeight());
+
         //balls
         for(int i = 0; i<textureList.size();++i){
             float height = levelList.get(i).y /GameScreenManager.PPM_H;
-            spriteBatch.draw(textureList.get(i),vector2ArrayList.get(i).x,vector2ArrayList.get(i).y - height /2,
+
+            spriteBatch.draw(textureList.get(i),vector2ArrayList.get(i).x - height /2 ,vector2ArrayList.get(i).y - height /2,
                     levelList.get(i).x / GameScreenManager.PPM_W,height);
         }
 
@@ -136,9 +130,18 @@ public class GameScreenManager implements DrawableInterface {
         TextureRegion textureRegion1 = Weapon.getWeapon().anim.getKeyFrame(passedTime,true);
         weapon = Weapon.getWeapon();
 
-        spriteBatch.draw(textureRegion, player.playerBody.getPosition().x, player.playerBody.getPosition().y, player.width,player.height);
-        spriteBatch.draw(textureRegion1, weapon.weaponBody.getPosition().x, weapon.weaponBody.getPosition().y, weapon.width,weapon.height);
+        spriteBatch.draw(textureRegion, player.playerBody.getPosition().x - player.width/2,
+                player.playerBody.getPosition().y - player.height /2,
+                player.width,
+                player.height);
 
+        //Weapon draw while actived by touch
+        if(Weapon.getWeapon().isActive) {
+            spriteBatch.draw(textureRegion1, weapon.weaponBody.getPosition().x - weapon.width / 2,
+                    weapon.weaponBody.getPosition().y - weapon.height / 2,
+                    weapon.width,
+                    weapon.height);
+        }
         spriteBatch.end();
         // draw box2d world
         box2DDebugRenderer.render(world, orthoCam.combined);
@@ -242,11 +245,13 @@ public class GameScreenManager implements DrawableInterface {
                     int index = 0;
 
                     BodyDef bdef = new BodyDef();
+                    Vector2 ballPosition = new Vector2(ball.position.x + ball.length.x/2,
+                                                        ball.position.y + ball.length.y/2);
                     bdef.position.set(ball.position);
                     bdef.type = BodyDef.BodyType.DynamicBody;
                     Body body = world.createBody(bdef);
                     CircleShape shape = new CircleShape();
-                    shape.setRadius(10 * ball.getLevel() / GameScreenManager.PPM_H);
+                    shape.setRadius(ball.length.y);
 
                     synchronized (PlayState.balls) {
                         ball.body = body;
@@ -275,45 +280,15 @@ public class GameScreenManager implements DrawableInterface {
 
 
     private void createPlayer() {
-        BodyDef bdef = new BodyDef();
-        bdef.position.set((320 - (64 /2)) / GameScreenManager.PPM_W, (118 - 64/2) / GameScreenManager.PPM_H );
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        Body body = world.createBody(bdef);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(5 / GameScreenManager.PPM_W, 5 / GameScreenManager.PPM_H);
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-        fdef.filter.categoryBits = CollisionVar.BIT_PLAYER;
-        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL;
-        body.createFixture(fdef).setUserData("player");
-        Player.getPlayer().playerBody = body;
-        Player.getPlayer().setPlayerBody(body);
-        Player.getPlayer().width = (int) (64 / GameScreenManager.PPM_W);
-        Player.getPlayer().height = (int) (64 / GameScreenManager.PPM_H);
-        System.out.println("body pos : " + Player.getPlayer().playerBody.getPosition().x + " y : " + Player.getPlayer().playerBody.getPosition().y);
+        Player.getPlayer().createPlayer(world);
     }
 
     private void createWeapon(){
-        BodyDef bdef = new BodyDef();
-        bdef.position.set((320 - (64 /2)) / GameScreenManager.PPM_W, (118 - 64/2) / GameScreenManager.PPM_H );
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        Body body = world.createBody(bdef);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(5 / GameScreenManager.PPM_W, 5 / GameScreenManager.PPM_H);
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-        fdef.filter.categoryBits = CollisionVar.BIT_WEAPON;
-        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL;
-        body.createFixture(fdef).setUserData("weapon");
-        Weapon.getWeapon().weaponBody = body;
-        Weapon.getWeapon().width = (int) (64 / GameScreenManager.PPM_W);
-        Weapon.getWeapon().height = (int) (64 / GameScreenManager.PPM_H);
-
+       if(Weapon.getWeapon().isActive)
+        Weapon.getWeapon().createWeapon(world);
     }
 
-    private class CollisionVar {
+    public static class CollisionVar {
         // category bits
         public static final short BIT_SCREEN = 2;
         public static final short BIT_BALL = 4;

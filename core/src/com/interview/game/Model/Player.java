@@ -4,7 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Transform;
+import com.badlogic.gdx.physics.box2d.World;
+import com.interview.game.Screen.GameScreenManager;
 import com.interview.game.State.PlayState;
 
 /**
@@ -22,6 +27,9 @@ public class Player {
 
     public boolean is_enable_walking_right = true;
     public boolean isIs_enable_walking_left = true;
+
+    private int counter_left = 0;
+    private int counter_right = 0;
 
     private static Player player = null;
 
@@ -50,11 +58,15 @@ public class Player {
             newPosition.add(direction);
             playerBody.setTransform(newPosition.x, newPosition.y, playerBody.getAngle());
 
-            if(!isIs_enable_walking_left)
+            if(!isIs_enable_walking_left && counter_left > 2) {
                 isIs_enable_walking_left = true;
+                counter_left = 0;
+            }else if(!isIs_enable_walking_left){
+                ++ counter_left;
+            }
         }
 
-        System.out.println("pos x : " + playerBody.getPosition().x);
+        //System.out.println("pos x : " + playerBody.getPosition().x);
     }
 
     public void moveLeft() {
@@ -66,10 +78,35 @@ public class Player {
             newPosition.add(direction);
             playerBody.setTransform(newPosition, playerBody.getAngle());
             //playerBody.setTransform(newPosition.x,newPosition.y,playerBody.getAngle());
-            if(!is_enable_walking_right)
+            if(!is_enable_walking_right &&  counter_right > 2) {
                 is_enable_walking_right = true;
-        }
-        System.out.println("pos x : " + playerBody.getPosition().x);
+                counter_right = 0;
 
+            }else if(!is_enable_walking_right){
+                counter_right += 1;
+            }
+        }
+      //  System.out.println("pos x : " + playerBody.getPosition().x);
+
+    }
+
+    public void createPlayer(World world){
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(320 / GameScreenManager.PPM_W, 110  / GameScreenManager.PPM_H );
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        Body body = world.createBody(bdef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(20 / GameScreenManager.PPM_W, 20 / GameScreenManager.PPM_H);
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_PLAYER;
+        fdef.filter.maskBits = GameScreenManager.CollisionVar.BIT_SCREEN | GameScreenManager.CollisionVar.BIT_BALL;
+        body.createFixture(fdef).setUserData("player");
+        Player.getPlayer().playerBody = body;
+        Player.getPlayer().setPlayerBody(body);
+        Player.getPlayer().width = (int) (64 / GameScreenManager.PPM_W);
+        Player.getPlayer().height = (int) (64 / GameScreenManager.PPM_H);
+        System.out.println("body pos : " + Player.getPlayer().playerBody.getPosition().x + " y : " + Player.getPlayer().playerBody.getPosition().y);
     }
 }

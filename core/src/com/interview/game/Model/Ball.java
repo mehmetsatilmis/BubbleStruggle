@@ -1,9 +1,11 @@
 package com.interview.game.Model;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.interview.game.Screen.GameScreenManager;
 
 import java.util.ArrayList;
 
@@ -75,22 +77,21 @@ public class Ball {
             if(level == 1){
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
-                length = new Vector2(8,10);
+                length = new Vector2(4 / GameScreenManager.PPM_W,4 / GameScreenManager.PPM_H);
             }else if(level == 2){
                 texturePath = com.interview.game.Manager.FileManager.GREEN_BALL;
                 ballName = "greenball";
-                length = new Vector2(16,20);
+                length = new Vector2(8 / GameScreenManager.PPM_W,8 / GameScreenManager.PPM_H);
 
             }else if(level == 3){
                 texturePath = com.interview.game.Manager.FileManager.PINK_BALL;
                 ballName = "pinkball";
-                length = new Vector2(32,36);
+                length = new Vector2(16 / GameScreenManager.PPM_W,16 / GameScreenManager.PPM_H);
 
             }else{
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
-                length = new Vector2(8,8);
-
+                length = new Vector2(8 / GameScreenManager.PPM_W,8 /GameScreenManager.PPM_H);
             }
         }
         // create 2 balls type after break

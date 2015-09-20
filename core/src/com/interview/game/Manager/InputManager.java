@@ -61,10 +61,12 @@ public class InputManager {
             isTouched = true;
             if(!Weapon.getWeapon().isActive)
                 synchronized (Weapon.getWeapon()){
-                    Weapon.getWeapon().isActive = true;
+                    Weapon.getWeapon().shoot();
                 }
         } else
             isTouched = false;
+
+
 
     }
 
