@@ -1,5 +1,5 @@
 
-package com.interview.game.Model;
+package com.interview.game.Manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.LinkedHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class AnimationManager {

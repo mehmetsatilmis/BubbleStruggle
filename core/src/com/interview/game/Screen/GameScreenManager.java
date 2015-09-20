@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,14 +15,13 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.interview.game.Model.AnimationManager;
+import com.interview.game.Manager.AnimationManager;
 import com.interview.game.Model.Ball;
-import com.interview.game.Model.FileManager;
+import com.interview.game.Manager.FileManager;
 import com.interview.game.Model.Player;
+import com.interview.game.Model.Weapon;
 import com.interview.game.Operation.CallBack.BallCallBack;
-import com.interview.game.Operation.CallBack.CreateBallCallBackAbstract;
 import com.interview.game.Operation.CreateBall;
-import com.interview.game.Screen.DrawableInterface;
 import com.interview.game.State.PlayState;
 
 import java.util.ArrayList;
@@ -45,6 +43,7 @@ public class GameScreenManager implements DrawableInterface {
     public float dt;
     public float passedTime;
     public Player player;
+    public Weapon weapon;
 
     public CreateBall createBallClass;
 
@@ -70,15 +69,24 @@ public class GameScreenManager implements DrawableInterface {
         orthoCam.setToOrtho(false, WIDTH  , HEIGHT );
         box2DDebugRenderer = new Box2DDebugRenderer();
         player = Player.getPlayer();
-        player.anim = AnimationManager.getInstance().getAnimation(AnimationManager.SPRITE_WALKING_RIGHT,"walkright");
+        player.anim = AnimationManager.getInstance().getAnimation(AnimationManager.SPRITE_WALKING_RIGHT, "walkright");
+        Weapon.getWeapon().anim = AnimationManager.getInstance().getAnimation(AnimationManager.WEAPON,"weapon");
     }
 
     public void setPlayerAnim(Animation anim){
         Player.getPlayer().anim = anim;
     }
 
+    public void WeaponAnim(Animation anim){
+        Player.getPlayer().anim = anim;
+    }
+
     public Player getPlayer(){
         return Player.getPlayer();
+    }
+
+    public Weapon getWeapon(){
+        return Weapon.getWeapon();
     }
 
     @Override
@@ -125,8 +133,11 @@ public class GameScreenManager implements DrawableInterface {
         //player
         player = Player.getPlayer();
         TextureRegion textureRegion = player.anim.getKeyFrame(passedTime, true);
+        TextureRegion textureRegion1 = Weapon.getWeapon().anim.getKeyFrame(passedTime,true);
+        weapon = Weapon.getWeapon();
 
         spriteBatch.draw(textureRegion, player.playerBody.getPosition().x, player.playerBody.getPosition().y, player.width,player.height);
+        spriteBatch.draw(textureRegion1, weapon.weaponBody.getPosition().x, weapon.weaponBody.getPosition().y, weapon.width,weapon.height);
 
         spriteBatch.end();
         // draw box2d world
@@ -245,7 +256,7 @@ public class GameScreenManager implements DrawableInterface {
                         fdef.shape = shape;
                         fdef.restitution = (float) 1.1;
                         fdef.filter.categoryBits = CollisionVar.BIT_BALL;
-                        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_PLAYER;
+                        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_PLAYER | CollisionVar.BIT_WEAPON;
                         body.createFixture(fdef).setUserData("" + index);
                     }
 
@@ -259,6 +270,7 @@ public class GameScreenManager implements DrawableInterface {
 
         createPlayer();
         createBallClass.runCreateBall();
+        createWeapon();
     }
 
 
@@ -282,10 +294,30 @@ public class GameScreenManager implements DrawableInterface {
         System.out.println("body pos : " + Player.getPlayer().playerBody.getPosition().x + " y : " + Player.getPlayer().playerBody.getPosition().y);
     }
 
+    private void createWeapon(){
+        BodyDef bdef = new BodyDef();
+        bdef.position.set((320 - (64 /2)) / GameScreenManager.PPM_W, (118 - 64/2) / GameScreenManager.PPM_H );
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        Body body = world.createBody(bdef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(5 / GameScreenManager.PPM_W, 5 / GameScreenManager.PPM_H);
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = CollisionVar.BIT_WEAPON;
+        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL;
+        body.createFixture(fdef).setUserData("weapon");
+        Weapon.getWeapon().weaponBody = body;
+        Weapon.getWeapon().width = (int) (64 / GameScreenManager.PPM_W);
+        Weapon.getWeapon().height = (int) (64 / GameScreenManager.PPM_H);
+
+    }
+
     private class CollisionVar {
         // category bits
         public static final short BIT_SCREEN = 2;
         public static final short BIT_BALL = 4;
-        public static final short BIT_PLAYER = 8;
+        public static final short BIT_WEAPON = 8;
+        public static final short BIT_PLAYER = 16;
     }
 }

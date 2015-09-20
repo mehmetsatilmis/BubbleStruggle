@@ -1,8 +1,9 @@
-package com.interview.game.Model;
+package com.interview.game.Manager;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.interview.game.Model.Weapon;
 
 /**
  * Created by msatilmis on 30.08.2015.
@@ -58,6 +59,10 @@ public class InputManager {
         /** listen for bullet **/
         if (Gdx.input.isTouched()) {
             isTouched = true;
+            if(!Weapon.getWeapon().isActive)
+                synchronized (Weapon.getWeapon()){
+                    Weapon.getWeapon().isActive = true;
+                }
         } else
             isTouched = false;
 

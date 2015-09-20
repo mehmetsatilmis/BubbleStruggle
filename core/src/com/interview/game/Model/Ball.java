@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -74,21 +73,21 @@ public class Ball {
             this.score = score;
 
             if(level == 1){
-                texturePath = FileManager.BLUE_BALL;
+                texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
                 length = new Vector2(8,10);
             }else if(level == 2){
-                texturePath = FileManager.GREEN_BALL;
+                texturePath = com.interview.game.Manager.FileManager.GREEN_BALL;
                 ballName = "greenball";
                 length = new Vector2(16,20);
 
             }else if(level == 3){
-                texturePath = FileManager.PINK_BALL;
+                texturePath = com.interview.game.Manager.FileManager.PINK_BALL;
                 ballName = "pinkball";
                 length = new Vector2(32,36);
 
             }else{
-                texturePath = FileManager.BLUE_BALL;
+                texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
                 length = new Vector2(8,8);
 

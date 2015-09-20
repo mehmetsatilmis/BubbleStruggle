@@ -2,26 +2,15 @@ package com.interview.game.State;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.interview.game.Model.AnimationManager;
-import com.interview.game.Model.InputManager;
+import com.interview.game.Manager.AnimationManager;
+import com.interview.game.Manager.InputManager;
 import com.interview.game.Operation.MyContantListener;
 import com.interview.game.Screen.GameScreenManager;
 import com.interview.game.Model.Ball;
-import com.interview.game.Operation.CallBack.BallCallBack;
-import com.interview.game.Operation.CreateBall;
 
 import java.util.ArrayList;
-import java.util.Random;
-
-import com.badlogic.gdx.graphics.g2d.Animation;
 
 /**
  * Created by msatilmis on 29.08.2015.
@@ -54,8 +43,8 @@ public class PlayState implements State {
 
     @Override
     public void checkStateRules() {
-        Animation anim = null;
-        Animation weaponAnim = null;
+        com.badlogic.gdx.graphics.g2d.Animation anim = null;
+        com.badlogic.gdx.graphics.g2d.Animation weaponAnim = null;
         int type = InputManager.walking_type;
         if (type == 0) {
             anim = AnimationManager.getInstance().getAnimation(AnimationManager.SPRITE_WALKING_LEFT, "walkleft");

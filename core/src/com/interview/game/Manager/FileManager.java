@@ -1,4 +1,4 @@
-package com.interview.game.Model;
+package com.interview.game.Manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

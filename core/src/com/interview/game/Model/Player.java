@@ -17,7 +17,6 @@ public class Player {
     public Body playerBody;
     public Vector2 preposition;
     public Animation anim;
-    public int velocity = 40000;
     public int width;
     public int height;
 
