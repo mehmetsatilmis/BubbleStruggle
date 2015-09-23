@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.interview.game.Model.Player;
 import com.interview.game.Model.Weapon;
+import com.interview.game.Operation.CallBack.PlayerActionCallBackAbstract;
 import com.interview.game.Operation.CallBack.WeaponActionCallBackAbstract;
 
 /**
@@ -18,10 +19,13 @@ import com.interview.game.Operation.CallBack.WeaponActionCallBackAbstract;
 public class MyContantListener implements ContactListener {
 
     private WeaponActionCallBackAbstract callBack;
+    private PlayerActionCallBackAbstract playerCallBack;
 
-    public MyContantListener(WeaponActionCallBackAbstract callBack) {
+    public MyContantListener(WeaponActionCallBackAbstract callBack,PlayerActionCallBackAbstract playerCallBack) {
         this.callBack = callBack;
+        this.playerCallBack = playerCallBack;
     }
+
 
     @Override
     public void beginContact(Contact contact) {
@@ -52,6 +56,12 @@ public class MyContantListener implements ContactListener {
                             Player.getPlayer().isIs_enable_walking_left = true;
                         }
                     }
+                } else if (fb.getUserData().toString().contains("ball")){
+                    synchronized (Player.getPlayer()){
+                        Player.getPlayer().lifeCount -= 1;
+                        Player.getPlayer().playerBody.setActive(false);
+                    }
+                    playerCallBack.onResponse(0);
                 }
             } else {
                 System.out.println(" fb : " + fb.getUserData());
@@ -68,6 +78,12 @@ public class MyContantListener implements ContactListener {
                         }
                     }
 
+                } else if (fa.getUserData().toString().contains("ball")){
+                    synchronized (Player.getPlayer()){
+                        Player.getPlayer().lifeCount -= 1;
+                        Player.getPlayer().playerBody.setActive(false);
+                    }
+                    playerCallBack.onResponse(0);
                 }
             }
 

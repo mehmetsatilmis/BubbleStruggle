@@ -9,6 +9,7 @@ import com.interview.game.Manager.InputManager;
 import com.interview.game.Model.Ball;
 import com.interview.game.Model.Player;
 import com.interview.game.Model.Weapon;
+import com.interview.game.Operation.CallBack.PlayerActionCallBackAbstract;
 import com.interview.game.Operation.CallBack.WeaponActionCallBackAbstract;
 import com.interview.game.Operation.MyContantListener;
 import com.interview.game.Screen.GameScreenManager;
@@ -39,6 +40,11 @@ public class PlayState implements State {
             @Override
             public void onResponse(final int index) {
                 checkWeaponAction(index);
+            }
+        }, new PlayerActionCallBackAbstract() {
+            @Override
+            public void onResponse(int state) {
+                checkPlayerAction(state);
             }
         }));
 
@@ -102,7 +108,17 @@ public class PlayState implements State {
             });
         }
 
+    }
 
+    private void checkPlayerAction(int state){
+        if(state == 0){
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    GameScreenManager.createPlayer();
+                }
+            });
+        }
     }
 
     @Override

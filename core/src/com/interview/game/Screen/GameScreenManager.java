@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -102,34 +103,16 @@ public class GameScreenManager implements DrawableInterface {
         // clear screen
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
         Texture texture = FileManager.getManager().getTexture(null, "background");
-        ArrayList<Texture> textureList = new ArrayList<Texture>();
-        ArrayList<Vector2> vector2ArrayList = new ArrayList<Vector2>();
-        ArrayList<Vector2> levelList = new ArrayList<Vector2>();
-        synchronized (PlayState.ballLinkedHashMap) {
-            for (int i = 0; i < PlayState.ballLinkedHashMap.size(); ++i) {
-                Ball ball = PlayState.ballLinkedHashMap.get(i);
-                if(ball.body.isActive()) {
-                    textureList.add(FileManager.getManager().getTexture(ball.getTexturePath(), ball.getBallName()));
-                    vector2ArrayList.add(ball.body.getPosition());
-                    levelList.add(ball.length);
-                }
-            }
+        spriteBatch.begin();
 
+        //Background
+        spriteBatch.draw(texture, startScreenX(), startScreenY(),
+                getScreenWidth(),
+                getScreenHeight());
 
-            spriteBatch.begin();
-            //Background
-            spriteBatch.draw(texture, startScreenX(), startScreenY(),
-                    getScreenWidth(),
-                    getScreenHeight());
+        renderBalls(spriteBatch);
+        renderPlayerInfo(spriteBatch);
 
-            //balls
-            for (int i = 0; i < textureList.size(); ++i) {
-                float height = levelList.get(i).y / GameScreenManager.PPM_H;
-
-                spriteBatch.draw(textureList.get(i), vector2ArrayList.get(i).x - height / 2, vector2ArrayList.get(i).y - height / 2,
-                        levelList.get(i).x / GameScreenManager.PPM_W, height);
-            }
-        }
         //player
         player = Player.getPlayer();
         TextureRegion textureRegion = player.anim.getKeyFrame(passedTime, true);
@@ -154,6 +137,43 @@ public class GameScreenManager implements DrawableInterface {
         spriteBatch.end();
         // draw box2d world
         box2DDebugRenderer.render(world, orthoCam.combined);
+    }
+
+    private void renderBalls(SpriteBatch spriteBatch){
+        ArrayList<Texture> textureList = new ArrayList<Texture>();
+        ArrayList<Vector2> vector2ArrayList = new ArrayList<Vector2>();
+        ArrayList<Vector2> levelList = new ArrayList<Vector2>();
+
+        synchronized (PlayState.ballLinkedHashMap) {
+            for (int i = 0; i < PlayState.ballLinkedHashMap.size(); ++i) {
+                Ball ball = PlayState.ballLinkedHashMap.get(i);
+                if(ball.body.isActive()) {
+                    textureList.add(FileManager.getManager().getTexture(ball.getTexturePath(), ball.getBallName()));
+                    vector2ArrayList.add(ball.body.getPosition());
+                    levelList.add(ball.length);
+                }
+            }
+            //balls
+            for (int i = 0; i < textureList.size(); ++i) {
+                float height = levelList.get(i).y / GameScreenManager.PPM_H;
+
+                spriteBatch.draw(textureList.get(i), vector2ArrayList.get(i).x - height / 2, vector2ArrayList.get(i).y - height / 2,
+                        levelList.get(i).x / GameScreenManager.PPM_W, height);
+            }
+        }
+    }
+
+    private void renderPlayerInfo(SpriteBatch spriteBatch){
+        Texture texture = FileManager.getManager().getTexture(FileManager.RETRY_COUNT_IMAGE,"count");
+        for(int i=0; i< Player.getPlayer().lifeCount; ++i){
+            spriteBatch.draw(texture,getScreenWidth()- (30 * (i+1))/ GameScreenManager.PPM_W,20 / GameScreenManager.PPM_H,
+                    30/ GameScreenManager.PPM_W,30/ GameScreenManager.PPM_H);
+        }
+
+        BitmapFont font = FileManager.getManager().getFont();
+        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        font.draw(spriteBatch, "SCORE : " + Player.getPlayer().score ,50 / GameScreenManager.PPM_W,
+                50 / GameScreenManager.PPM_H,(int) 30 / GameScreenManager.PPM_H,10,false);
     }
 
     @Override
@@ -296,7 +316,7 @@ public class GameScreenManager implements DrawableInterface {
 
     }
 
-    private void createPlayer() {
+    public static void createPlayer() {
         Player.getPlayer().createPlayer(world);
     }
 

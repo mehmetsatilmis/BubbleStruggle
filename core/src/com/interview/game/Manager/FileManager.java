@@ -2,6 +2,7 @@ package com.interview.game.Manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ public class FileManager {
 
     private LinkedHashMap<String ,Texture> textureList;
     private static FileManager fileManager = null;
+    private BitmapFont font = null;
 
     private FileManager(){
         textureList = new LinkedHashMap<String,Texture>();
@@ -51,6 +53,15 @@ public class FileManager {
         else
             return null;
 
+    }
+
+    public BitmapFont getFont(){
+        if(font == null) {
+            font = new BitmapFont(Gdx.files.internal(FONT_PATH),
+                    Gdx.files.internal(FONT_IMAGE), false);
+        }
+
+        return font;
     }
 
     public void dispose(){
