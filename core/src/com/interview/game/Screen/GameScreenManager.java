@@ -30,6 +30,8 @@ import java.util.ArrayList;
 
 /**
  * Created by msatilmis on 29.08.2015.
+ *
+ * Created for running game screen management, render and create player, weapon and balls
  */
 public class GameScreenManager implements DrawableInterface {
 
@@ -39,8 +41,8 @@ public class GameScreenManager implements DrawableInterface {
 
     public static int WIDTH;
     public static int HEIGHT;
-    public static float PPM_W = 5;
-    public static float PPM_H = 5;
+    public static float PPM_W = 5; //just initialize , to resize coordination for each devices (width)
+    public static float PPM_H = 5; //just initialize , to resize coordination for each devices (height)
     public float dt;
     public float passedTime;
     public Player player;
@@ -48,10 +50,11 @@ public class GameScreenManager implements DrawableInterface {
 
     public CreateBall createBallClass;
 
-    private int refereansWidth = 640;
+    private int refereansWidth = 640; // each position about screen elements, calculated for 640x480
     private int refereansHeight = 480;
-    private int referansTop = 400;
-    private int referansDown = 80;
+    private int referansTop = 400;  // game screen end y = 400 ,
+    private int referansDown = 80;  // game screen begin y = 80,
+
 
     private boolean is_draw_background = false;
 
@@ -158,7 +161,7 @@ public class GameScreenManager implements DrawableInterface {
                 float height = levelList.get(i).y / GameScreenManager.PPM_H;
 
                 spriteBatch.draw(textureList.get(i), vector2ArrayList.get(i).x - height / 2, vector2ArrayList.get(i).y - height / 2,
-                        levelList.get(i).x / GameScreenManager.PPM_W, height);
+                       height, height);
             }
         }
     }

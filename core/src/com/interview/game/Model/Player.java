@@ -11,15 +11,15 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.interview.game.Screen.GameScreenManager;
 
 /**
- * Created by airties on 15/09/15.
+ * Created by msatilmis on 15/09/15.
  */
 public class Player {
 
     public Integer score;
     public Integer lifeCount;
-    public Body playerBody;
+    public Body playerBody;     //using for position checking and collision
     public Vector2 preposition;
-    public Animation anim;
+    public Animation anim;      //current anim (left move , right move)
     public int width;
     public int height;
 
@@ -47,7 +47,11 @@ public class Player {
         preposition = playerBody.getPosition();
     }
 
+    /*
+        Set new position while moving right
+     */
     public void moveRight() {
+        //this var set from collision listener
         if (is_enable_walking_right) {
             float delta = Gdx.graphics.getDeltaTime() * 100;
             Vector2 direction = new Vector2(delta, 0);
@@ -67,6 +71,9 @@ public class Player {
         //System.out.println("pos x : " + playerBody.getPosition().x);
     }
 
+    /*
+       Set new position while moving left
+    */
     public void moveLeft() {
         if(isIs_enable_walking_left) {
             float delta = Gdx.graphics.getDeltaTime() * 100;
@@ -88,6 +95,7 @@ public class Player {
 
     }
 
+    //Create player with initial position
     public void createPlayer(World world){
         BodyDef bdef = new BodyDef();
         bdef.position.set(320 / GameScreenManager.PPM_W, 110  / GameScreenManager.PPM_H );
@@ -95,7 +103,7 @@ public class Player {
         Body body = world.createBody(bdef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(20 / GameScreenManager.PPM_W, 20 / GameScreenManager.PPM_H);
+        shape.setAsBox(24 / GameScreenManager.PPM_W, 24 / GameScreenManager.PPM_H);
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_PLAYER;

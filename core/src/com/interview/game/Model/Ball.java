@@ -82,6 +82,7 @@ public class Ball {
             this.score = score;
             Vector2 length_local;
 
+            //using same length for each child ball
             if(level == 1){
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
@@ -99,7 +100,7 @@ public class Ball {
             }else{
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
-                length = new Vector2(8 / GameScreenManager.PPM_W,8 / GameScreenManager.PPM_H);
+                length = new Vector2(8 / GameScreenManager.PPM_W,8 /GameScreenManager.PPM_H);
             }
         }
         // create 2 balls type after break

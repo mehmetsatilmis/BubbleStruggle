@@ -32,6 +32,8 @@ public class MyContantListener implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
         System.out.println("fa " + fa.getUserData() + " fb : " + fb.getUserData());
+
+        //is player
         if (fa.getUserData().equals("player") || fb.getUserData().equals("player")) {
             Body playerBody = null;
             boolean is_first = false;
@@ -44,6 +46,7 @@ public class MyContantListener implements ContactListener {
             }
 
             if (is_first) {
+                // other body is boundaries of screen
                 if (fb.getUserData().equals("left") || fb.getUserData().equals("right")) {
                     if (fb.getUserData().equals("left")) {
                         synchronized (Player.getPlayer()) {
@@ -56,6 +59,7 @@ public class MyContantListener implements ContactListener {
                             Player.getPlayer().isIs_enable_walking_left = true;
                         }
                     }
+                    //other body is a ball ?
                 } else if (fb.getUserData().toString().contains("ball")){
                     synchronized (Player.getPlayer()){
                         Player.getPlayer().lifeCount -= 1;
@@ -65,6 +69,7 @@ public class MyContantListener implements ContactListener {
                 }
             } else {
                 System.out.println(" fb : " + fb.getUserData());
+                // other body is boundaries of screen
                 if (fa.getUserData().equals("left") || fa.getUserData().equals("right")) {
                     if (fa.getUserData().equals("left")) {
                         synchronized (Player.getPlayer()) {
@@ -83,11 +88,11 @@ public class MyContantListener implements ContactListener {
                         Player.getPlayer().lifeCount -= 1;
                         Player.getPlayer().playerBody.setActive(false);
                     }
-                    playerCallBack.onResponse(0);
+                    playerCallBack.onResponse(0); //state = 0 for recreate player
                 }
             }
 
-
+        // is weapon
         } else if (fa.getUserData().equals("weapon") || fb.getUserData().equals("weapon")) {
             boolean is_first = false;
             if (fa.getUserData().equals("weapon")) {
@@ -97,12 +102,12 @@ public class MyContantListener implements ContactListener {
             if (is_first) {
                 if (fb.getUserData().equals("top")) {
                     synchronized (Weapon.getWeapon()) {
-                        Weapon.getWeapon().isActive = false;
+                        Weapon.getWeapon().isActive = false; //end of weapons life
                     }
                 } else if (fb.getUserData().toString().contains("ball")) {
                     int index = fb.getUserData().toString().indexOf("ball");
                     index = Integer.parseInt(fb.getUserData().toString().substring(index + 4));
-                    callBack.onResponse(index);
+                    callBack.onResponse(index); // just say ball index for created child balls
                     synchronized (Weapon.getWeapon()) {
                         Weapon.getWeapon().isActive = false;
                     }
@@ -126,7 +131,7 @@ public class MyContantListener implements ContactListener {
         } else {
             float angle = 0;
             Body body;
-
+            //one body must be ball and change direction
             if (fa.getUserData().equals("down") || fa.getUserData().equals("top") || fa.getUserData().equals("left") || fa.getUserData().equals("right")) {
                 body = fb.getBody();
             } else {

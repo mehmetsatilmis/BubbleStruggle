@@ -13,15 +13,15 @@ import com.badlogic.gdx.utils.Array;
 import com.interview.game.Screen.GameScreenManager;
 
 /**
- * Created by airties on 18/09/15.
+ * Created by msatilmis on 18/09/15.
  */
 public class Weapon {
     public Animation anim;
-    public Body weaponBody;
+    public Body weaponBody;     //position tracking and collision listener
     public Vector2 preposition;
     public int width;
     public int height;
-    public boolean isActive = false;
+    public boolean isActive = false; // control flag for just one created weapon for each scene
 
     private static Weapon weapon = null;
 
@@ -31,6 +31,9 @@ public class Weapon {
         return weapon;
     }
 
+    /*
+        Shoot action and control for
+     */
     public void shoot() {
 
         if(!isActive) {
@@ -45,12 +48,13 @@ public class Weapon {
         newPosition.add(direction);
         weaponBody.setTransform(newPosition.x, newPosition.y, weaponBody.getAngle());
 
+        //destroyFixture for getting taller about weapon's shape
         Array<Fixture> arr = weaponBody.getFixtureList();
         if(arr.size > 0)
             weaponBody.destroyFixture(arr.first());
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(15, 25);
+        shape.setAsBox(15, 30); //TODO hard codded for shape , weapon don't be getting taller
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
         fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_PLAYER;
@@ -58,6 +62,9 @@ public class Weapon {
         weaponBody.createFixture(fdef).setUserData("weapon");
     }
 
+    /*
+       Create weapon with player position
+     */
     public void createWeapon(World world){
         BodyDef bdef = new BodyDef();
         bdef.position.set(Player.getPlayer().playerBody.getPosition().x,

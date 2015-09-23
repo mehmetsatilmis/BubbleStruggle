@@ -9,7 +9,7 @@ import com.interview.game.Screen.GameScreenManager;
 public interface State {
 
     public void setGameScreenManager(GameScreenManager gameScreenManager);
-    public void checkStateRules();
+    public void checkStateRules(); //This function using to control for each scenes rules
 
     public void pause();
     public void resume();
