@@ -6,12 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.interview.game.Manager.AnimationManager;
 import com.interview.game.Manager.InputManager;
+import com.interview.game.Model.Ball;
+import com.interview.game.Model.Player;
 import com.interview.game.Model.Weapon;
+import com.interview.game.Operation.CallBack.WeaponActionCallBackAbstract;
 import com.interview.game.Operation.MyContantListener;
 import com.interview.game.Screen.GameScreenManager;
-import com.interview.game.Model.Ball;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by msatilmis on 29.08.2015.
@@ -25,14 +28,19 @@ public class PlayState implements State {
     private float passedTime = 0f;
 
     public static ArrayList<Ball> balls;
+    public static LinkedHashMap<Integer, Ball>  ballLinkedHashMap = new LinkedHashMap<Integer, Ball>();
 
 
     public PlayState() {
-        balls = new ArrayList<Ball>();
         world = new World(new Vector2(0, 0), true);
         gameScreenManager = new GameScreenManager(Gdx.graphics.getDeltaTime(), world);
         gameScreenManager.create();
-        world.setContactListener(new MyContantListener());
+        world.setContactListener(new MyContantListener(new WeaponActionCallBackAbstract() {
+            @Override
+            public void onResponse(final int index) {
+                checkWeaponAction(index);
+            }
+        }));
 
     }
 
@@ -61,11 +69,38 @@ public class PlayState implements State {
             weaponAnim = AnimationManager.getInstance().getAnimation(AnimationManager.WEAPON, "weapon");
         }
 
-        if(Weapon.getWeapon().isActive){
+        if (Weapon.getWeapon().isActive) {
             Weapon.getWeapon().shoot();
         }
 
         gameScreenManager.setPlayerAnim(anim);
+
+    }
+
+    private void checkWeaponAction(int index) {
+        if (index < 0)
+            return;
+        System.out.println(index);
+        Ball ball;
+        final ArrayList<Ball> list;
+        synchronized (ballLinkedHashMap) {
+            ball = ballLinkedHashMap.get(index);
+            Player.getPlayer().score += ball.getLevel() * 10;
+            ball.body.setActive(false);
+            list = ball.createChildBall();
+            ballLinkedHashMap.remove(ball);
+        }
+
+        System.out.println(list.size());
+        for (int i = 0; i < list.size(); ++i) {
+            final int finalI = i;
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                   GameScreenManager.createBall(list.get(finalI));
+                }
+            });
+        }
 
 
     }
@@ -97,8 +132,8 @@ public class PlayState implements State {
 
     @Override
     public void dispose() {
-        for (int i = 0; i < balls.size(); ++i) {
-            balls.get(i).dispose();
+        for (int i = 0; i < ballLinkedHashMap.size(); ++i) {
+            ballLinkedHashMap.get(i).dispose();
         }
     }
 

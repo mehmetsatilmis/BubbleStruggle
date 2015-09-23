@@ -1,7 +1,6 @@
 package com.interview.game.Model;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -30,6 +29,13 @@ public class Ball {
         this.direction = direction;
         //texture = FileManager.getManager().getTexture(ballType.texturePath,ballType.ballName);
     }
+    public Ball(Vector2 vector2,Vector2 len,BallType ballType, Vector2 direction){
+        this.ballType = ballType;
+        position = vector2;
+        this.direction = direction;
+        length = len;
+        //texture = FileManager.getManager().getTexture(ballType.texturePath,ballType.ballName);
+    }
 
     private Ball(Vector2 vector2,BallType ballType, Vector2 direction){
         this.ballType = ballType;
@@ -39,10 +45,11 @@ public class Ball {
     // create 2 balls  after break
     public ArrayList<Ball> createChildBall(){
         ArrayList<BallType> ballTypes = ballType.createChildBall();
-        ArrayList<Ball> balls = new ArrayList<Ball>();
-        balls.add(new Ball(position,ballTypes.get(1),new Vector2(-1,-1)));
-        balls.add(new Ball(position,ballTypes.get(2),new Vector2(1,-1)));
-
+        ArrayList<Ball> balls = new ArrayList<Ball>(3);
+        if(ballTypes != null) {
+            balls.add(new Ball(new Vector2(body.getPosition()), new Vector2(length),ballTypes.get(0), new Vector2(-1, -1)));
+            balls.add(new Ball(new Vector2(body.getPosition()), new Vector2(length) ,ballTypes.get(1), new Vector2(1, -1)));
+        }
         return balls;
     }
 
@@ -73,6 +80,7 @@ public class Ball {
         public BallType(int level, int score){
             this.level = level;
             this.score = score;
+            Vector2 length_local;
 
             if(level == 1){
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
@@ -91,7 +99,7 @@ public class Ball {
             }else{
                 texturePath = com.interview.game.Manager.FileManager.BLUE_BALL;
                 ballName = "blueball";
-                length = new Vector2(8 / GameScreenManager.PPM_W,8 /GameScreenManager.PPM_H);
+                length = new Vector2(8 / GameScreenManager.PPM_W,8 / GameScreenManager.PPM_H);
             }
         }
         // create 2 balls type after break
@@ -99,7 +107,7 @@ public class Ball {
             if(this.level == 1)
                 return null;
 
-            ArrayList<BallType> ballList = new ArrayList<BallType>();
+            ArrayList<BallType> ballList = new ArrayList<BallType>(3);
             ballList.add(new BallType(level-1,score/2));
             ballList.add(new BallType(level-1,score/2));
             return ballList;

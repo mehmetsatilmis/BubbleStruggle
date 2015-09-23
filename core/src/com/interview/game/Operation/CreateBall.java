@@ -1,9 +1,9 @@
 package com.interview.game.Operation;
 
 import com.badlogic.gdx.math.Vector2;
-import com.interview.game.Screen.GameScreenManager;
 import com.interview.game.Model.Ball;
 import com.interview.game.Operation.CallBack.CreateBallCallBackAbstract;
+import com.interview.game.Screen.GameScreenManager;
 
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;

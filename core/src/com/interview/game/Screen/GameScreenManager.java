@@ -16,8 +16,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.interview.game.Manager.AnimationManager;
-import com.interview.game.Model.Ball;
 import com.interview.game.Manager.FileManager;
+import com.interview.game.Model.Ball;
 import com.interview.game.Model.Player;
 import com.interview.game.Model.Weapon;
 import com.interview.game.Operation.CallBack.BallCallBack;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class GameScreenManager implements DrawableInterface {
 
-    public static  World world;
+    public static World world;
     private Box2DDebugRenderer box2DDebugRenderer;
     private OrthographicCamera orthoCam;
 
@@ -54,11 +54,11 @@ public class GameScreenManager implements DrawableInterface {
 
     private boolean is_draw_background = false;
 
-    public GameScreenManager(float step, World world){
+    public GameScreenManager(float step, World world) {
         this.world = world;
         dt = step;
 
-        WIDTH  = Gdx.graphics.getWidth();
+        WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
 
         float rate = (float) ((double) refereansWidth / (double) WIDTH);
@@ -66,18 +66,18 @@ public class GameScreenManager implements DrawableInterface {
         PPM_H = (float) ((double) refereansHeight / (double) HEIGHT);
         // set up box2d cam
         orthoCam = new OrthographicCamera();
-        orthoCam.setToOrtho(false, WIDTH  , HEIGHT );
+        orthoCam.setToOrtho(false, WIDTH, HEIGHT);
         box2DDebugRenderer = new Box2DDebugRenderer();
         player = Player.getPlayer();
         player.anim = AnimationManager.getInstance().getAnimation(AnimationManager.SPRITE_WALKING_RIGHT, "walkright");
-        Weapon.getWeapon().anim = AnimationManager.getInstance().getAnimation(AnimationManager.WEAPON,"weapon");
+        Weapon.getWeapon().anim = AnimationManager.getInstance().getAnimation(AnimationManager.WEAPON, "weapon");
     }
 
-    public void setPlayerAnim(Animation anim){
+    public void setPlayerAnim(Animation anim) {
         Player.getPlayer().anim = anim;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return Player.getPlayer();
     }
 
@@ -90,7 +90,11 @@ public class GameScreenManager implements DrawableInterface {
     @Override
     public void update() {
         orthoCam.update();
-        world.step(dt, 6, 2);
+        synchronized (world) {
+            if (world == null)
+                System.out.println("null");
+            world.step(dt, 6, 2);
+        }
     }
 
     @Override
@@ -101,46 +105,51 @@ public class GameScreenManager implements DrawableInterface {
         ArrayList<Texture> textureList = new ArrayList<Texture>();
         ArrayList<Vector2> vector2ArrayList = new ArrayList<Vector2>();
         ArrayList<Vector2> levelList = new ArrayList<Vector2>();
+        synchronized (PlayState.ballLinkedHashMap) {
+            for (int i = 0; i < PlayState.ballLinkedHashMap.size(); ++i) {
+                Ball ball = PlayState.ballLinkedHashMap.get(i);
+                if(ball.body.isActive()) {
+                    textureList.add(FileManager.getManager().getTexture(ball.getTexturePath(), ball.getBallName()));
+                    vector2ArrayList.add(ball.body.getPosition());
+                    levelList.add(ball.length);
+                }
+            }
 
-        for(int i= 0; i<PlayState.balls.size(); ++i){
-            Ball ball = PlayState.balls.get(i);
-            textureList.add(FileManager.getManager().getTexture(ball.getTexturePath(),ball.getBallName()));
-            vector2ArrayList.add(ball.body.getPosition());
-            levelList.add(ball.length);
+
+            spriteBatch.begin();
+            //Background
+            spriteBatch.draw(texture, startScreenX(), startScreenY(),
+                    getScreenWidth(),
+                    getScreenHeight());
+
+            //balls
+            for (int i = 0; i < textureList.size(); ++i) {
+                float height = levelList.get(i).y / GameScreenManager.PPM_H;
+
+                spriteBatch.draw(textureList.get(i), vector2ArrayList.get(i).x - height / 2, vector2ArrayList.get(i).y - height / 2,
+                        levelList.get(i).x / GameScreenManager.PPM_W, height);
+            }
         }
-
-
-        spriteBatch.begin();
-        //Background
-       // spriteBatch.draw(texture, startScreenX(), startScreenY(),
-       //         getScreenWidth(),
-        //        getScreenHeight());
-
-        //balls
-        for(int i = 0; i<textureList.size();++i){
-            float height = levelList.get(i).y /GameScreenManager.PPM_H;
-
-            spriteBatch.draw(textureList.get(i),vector2ArrayList.get(i).x - height /2 ,vector2ArrayList.get(i).y - height /2,
-                    levelList.get(i).x / GameScreenManager.PPM_W,height);
-        }
-
         //player
         player = Player.getPlayer();
         TextureRegion textureRegion = player.anim.getKeyFrame(passedTime, true);
-        TextureRegion textureRegion1 = Weapon.getWeapon().anim.getKeyFrame(passedTime,true);
+        TextureRegion textureRegion1 = Weapon.getWeapon().anim.getKeyFrame(passedTime, true);
         weapon = Weapon.getWeapon();
 
-        spriteBatch.draw(textureRegion, player.playerBody.getPosition().x - player.width/2,
-                player.playerBody.getPosition().y - player.height /2,
+        spriteBatch.draw(textureRegion, player.playerBody.getPosition().x - player.width / 2,
+                player.playerBody.getPosition().y - player.height / 2,
                 player.width,
                 player.height);
 
         //Weapon draw while actived by touch
-        if(Weapon.getWeapon().isActive) {
+        if (Weapon.getWeapon().isActive) {
             spriteBatch.draw(textureRegion1, weapon.weaponBody.getPosition().x - weapon.width / 2,
                     weapon.weaponBody.getPosition().y - weapon.height / 2,
                     weapon.width,
                     weapon.height);
+        }else{
+            if(Weapon.getWeapon().weaponBody != null)
+                Weapon.getWeapon().weaponBody.setActive(false);
         }
         spriteBatch.end();
         // draw box2d world
@@ -167,21 +176,22 @@ public class GameScreenManager implements DrawableInterface {
 
     }
 
-    private int startScreenX(){
+    private int startScreenX() {
         return 0;
     }
 
-    private int startScreenY(){
+    private int startScreenY() {
         return (int) (referansDown / GameScreenManager.PPM_H);
     }
 
-    private int getScreenWidth(){
+    private int getScreenWidth() {
         return (int) (refereansWidth / GameScreenManager.PPM_W);
     }
 
-    private int getScreenHeight(){
-        return (int) ((referansTop-referansDown) / GameScreenManager.PPM_H);
+    private int getScreenHeight() {
+        return (int) ((referansTop - referansDown) / GameScreenManager.PPM_H);
     }
+
     /*Boundaries game screen*/
     private void createLayout() {
         //down bound
@@ -206,7 +216,7 @@ public class GameScreenManager implements DrawableInterface {
         shape.setAsBox(GameScreenManager.WIDTH, 1);
         fdef.shape = shape;
         fdef.filter.categoryBits = CollisionVar.BIT_SCREEN;
-        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL| CollisionVar.BIT_PLAYER;
+        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL | CollisionVar.BIT_PLAYER;
 
         body.createFixture(fdef).setUserData("top");
 
@@ -219,7 +229,7 @@ public class GameScreenManager implements DrawableInterface {
         shape.setAsBox(0, GameScreenManager.HEIGHT);
         fdef.shape = shape;
         fdef.filter.categoryBits = CollisionVar.BIT_SCREEN;
-        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL| CollisionVar.BIT_PLAYER;
+        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL | CollisionVar.BIT_PLAYER;
         body.createFixture(fdef).setUserData("left");
 
         //right bound
@@ -227,7 +237,7 @@ public class GameScreenManager implements DrawableInterface {
         bdef.type = BodyDef.BodyType.StaticBody;
         body = world.createBody(bdef);
         fdef.filter.categoryBits = CollisionVar.BIT_SCREEN;
-        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL| CollisionVar.BIT_PLAYER;
+        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_BALL | CollisionVar.BIT_PLAYER;
 
         shape.setAsBox(0, GameScreenManager.HEIGHT);
         fdef.shape = shape;
@@ -241,35 +251,7 @@ public class GameScreenManager implements DrawableInterface {
         createBallClass = new CreateBall(10, new BallCallBack() {
             @Override
             public void onBallCreate(Ball ball) {
-                synchronized (world) {
-                    int index = 0;
-
-                    BodyDef bdef = new BodyDef();
-                    Vector2 ballPosition = new Vector2(ball.position.x + ball.length.x/2,
-                                                        ball.position.y + ball.length.y/2);
-                    bdef.position.set(ball.position);
-                    bdef.type = BodyDef.BodyType.DynamicBody;
-                    Body body = world.createBody(bdef);
-                    CircleShape shape = new CircleShape();
-                    shape.setRadius(ball.length.y);
-
-                    synchronized (PlayState.balls) {
-                        ball.body = body;
-                        PlayState.balls.add(ball);
-                        index = PlayState.balls.size();
-                        FixtureDef fdef = new FixtureDef();
-                        fdef.shape = shape;
-                        fdef.restitution = (float) 1.1;
-                        fdef.filter.categoryBits = CollisionVar.BIT_BALL;
-                        fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_PLAYER | CollisionVar.BIT_WEAPON;
-                        body.createFixture(fdef).setUserData("" + index);
-                    }
-
-                    float angle = (float) (Math.atan2(ball.direction.y, ball.direction.x));
-                    body.setLinearVelocity(new Vector2(45 * MathUtils.cos(angle), 45 * MathUtils.sin(angle)));
-
-                }
-
+                createBall(ball);
             }
         });
 
@@ -278,14 +260,49 @@ public class GameScreenManager implements DrawableInterface {
         createWeapon();
     }
 
+    public static void createBall(Ball ball) {
+        int index = 0;
+
+        BodyDef bdef = new BodyDef();
+        Vector2 ballPosition = new Vector2(ball.position.x + ball.length.x / 2,
+                ball.position.y + ball.length.y / 2);
+        bdef.position.set(ball.position);
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        Body body;
+        synchronized (world) {
+             body = world.createBody(bdef);
+        }
+        CircleShape shape = new CircleShape();
+        System.out.println("length : " + ball.length.y);
+        shape.setRadius(ball.length.y);
+
+        synchronized (PlayState.ballLinkedHashMap) {
+            ball.body = body;
+            PlayState.ballLinkedHashMap.put(PlayState.ballLinkedHashMap.size(), ball);
+            index = PlayState.ballLinkedHashMap.size();
+
+            FixtureDef fdef = new FixtureDef();
+            fdef.shape = shape;
+            fdef.restitution = (float) 1.1;
+            fdef.filter.categoryBits = CollisionVar.BIT_BALL;
+            fdef.filter.maskBits = CollisionVar.BIT_SCREEN | CollisionVar.BIT_PLAYER | CollisionVar.BIT_WEAPON;
+
+            ball.body.createFixture(fdef).setUserData("ball" + (index - 1));
+        }
+
+        float angle = (float) (Math.atan2(ball.direction.y, ball.direction.x));
+        ball.body.setLinearVelocity(new Vector2(45 * MathUtils.cos(angle), 45 * MathUtils.sin(angle)));
+
+
+    }
 
     private void createPlayer() {
         Player.getPlayer().createPlayer(world);
     }
 
-    private void createWeapon(){
-       if(Weapon.getWeapon().isActive)
-        Weapon.getWeapon().createWeapon(world);
+    private void createWeapon() {
+        if (Weapon.getWeapon().isActive)
+            Weapon.getWeapon().createWeapon(world);
     }
 
     public static class CollisionVar {

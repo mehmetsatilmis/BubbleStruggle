@@ -11,9 +11,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.interview.game.Screen.GameScreenManager;
-import com.interview.game.State.PlayState;
-
-import java.util.ArrayList;
 
 /**
  * Created by airties on 18/09/15.
@@ -56,7 +53,7 @@ public class Weapon {
         shape.setAsBox(15, 25);
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
-        fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_WEAPON;
+        fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_PLAYER;
         fdef.filter.maskBits = GameScreenManager.CollisionVar.BIT_SCREEN | GameScreenManager.CollisionVar.BIT_BALL;
         weaponBody.createFixture(fdef).setUserData("weapon");
     }
@@ -67,6 +64,7 @@ public class Weapon {
                 Player.getPlayer().playerBody.getPosition().y + 10);
         bdef.type = BodyDef.BodyType.DynamicBody;
         synchronized (world){
+            System.out.println("**************************");
             weaponBody = world.createBody(bdef);
         }
 
@@ -74,7 +72,7 @@ public class Weapon {
         shape.setAsBox(15 / GameScreenManager.PPM_W, 25 / GameScreenManager.PPM_H);
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
-        fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_WEAPON;
+        fdef.filter.categoryBits = GameScreenManager.CollisionVar.BIT_PLAYER;
         fdef.filter.maskBits = GameScreenManager.CollisionVar.BIT_SCREEN | GameScreenManager.CollisionVar.BIT_BALL;
         weaponBody.createFixture(fdef).setUserData("weapon");
         Weapon.getWeapon().width = (int) (20 / GameScreenManager.PPM_W);
